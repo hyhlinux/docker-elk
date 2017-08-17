@@ -23,3 +23,10 @@ curl -XPOST http://127.0.0.1:9200/logstash-2017.08.17/testlog -d '{
     "user" : "006",
     "mesg" : "006 message into Elasticsearch"
 }'
+
+
+PUBLISH logstash-2 '{"message":"hello009 world","@version":"1","@timestamp":"2016-08-09T16:34:21.865Z","host":"raochenlindeMacBook-Air.local","key1":"2016 huoyinghui"}'
+
+PUBLISH logstash-2 '{"message":"hello009 world","@version":"1","@timestamp":"2017-08-09T16:34:21.865Z","host":"raochenlindeMacBook-Air.local","key1":"2017 huoyinghui"}'
+
+PUBLISH logstash-2 '{"message":"hello009 world","@version":"1","@timestamp":"2018-08-09T16:34:21.865Z","host":"raochenlindeMacBook-Air.local","key1":"2018 huoyinghui", "key2":"key2"}'

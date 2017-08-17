@@ -144,3 +144,8 @@ docker run --rm -it  --link elk_e:elasticsearch  --link some-redis:redis -e LS_J
         -v `pwd`/logstash/pipeline:/usr/share/logstash/pipeline \
          dockerelk_logstash
 ```
+#### es head
+```bash
+docker run -d --name elk_e_head --link elk_e:localhost -p 9100:9100 -e HTTP_PROXY='' -e http_proxy='' mobz/elasticsearch-head:5
+
+```
