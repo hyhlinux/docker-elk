@@ -3,3 +3,6 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:5.5.1
 
 # Add your elasticsearch plugins setup here
 # Example: RUN elasticsearch-plugin install analysis-icu
+RUN elasticsearch-plugin install analysis-icu
+RUN elasticsearch-plugin install mobz/elasticsearch-head
+#RUN elasticsearch-plugin install lmenezes/elasticsearch-kopf/
