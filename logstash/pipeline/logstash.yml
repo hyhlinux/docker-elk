@@ -1,0 +1,61 @@
+# input {
+# 	tcp {
+# 		port => 5000
+# 	}
+# }
+
+# ## Add your filters / logstash plugins configuration here
+
+# output {
+# 	elasticsearch {
+# 		hosts => "elasticsearch:9200"
+# 	}
+# }
+
+input {
+    # tcp {
+    #     port => 5000
+    #     mode => "server"
+    #     ssl_enable => false
+    # }
+    redis {
+        data_type => "pattern_channel"
+        key => "logstash-*"
+        host => "redis"
+        port => 6379
+        threads => 5
+    }
+}
+
+# filter {
+#     grok {
+#         match => ["message", "%{HTTPDATE:logdate}"]
+#     }
+#     date {
+#         match => ["logdate", "dd/MMM/yyyy:HH:mm:ss Z"]
+#     }
+#     geoip {
+#         source => "message"
+#         fields => ["city_name", "continent_code", "country_code2", "country_code3", "country_name", "dma_code", "ip", "latitude", "longitude", "postal_code", "region_name", "timezone"]
+#     }
+# }
+
+output {
+    # stdout {
+    #     codec => rubydebug
+    # }
+    # tcp {
+    #     host  => "localhost"
+    #     port  => 8888
+    #     codec => json_lines
+    # }
+    elasticsearch {
+        hosts => "elasticsearch:9200"
+        index => "logstash-%{type}-%{+YYYY.MM.dd}"
+        document_type => "%{type}"
+        flush_size => 20000
+        idle_flush_time => 10
+        sniffing => true
+        template_overwrite => true
+    }
+}
