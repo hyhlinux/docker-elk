@@ -143,6 +143,13 @@ docker run --rm -it  --link elk_e:elasticsearch  --link some-redis:redis -e LS_J
         -v `pwd`/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml \
         -v `pwd`/logstash/pipeline:/usr/share/logstash/pipeline \
          dockerelk_logstash
+
+docker run -d --name elk_l --restart=always  --link elk_e:elasticsearch  -e LS_JAVA_OPTS="-Xmx256m -Xms256m" \
+        -v `pwd`/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml \
+        -v `pwd`/logstash/pipeline:/usr/share/logstash/pipeline  \
+        dockerelk_logstash
+
+
 ```
 #### es head
 ```bash

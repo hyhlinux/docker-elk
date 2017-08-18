@@ -51,11 +51,11 @@ output {
     # }
     elasticsearch {
         hosts => "elasticsearch:9200"
-        index => "logstash-redis-log-%{+YYYY.MM.dd}"
+        index => "logstash-%{+YYYY.MM.dd}"
         document_type => "redis-log"
-        # flush_size => 20000
-        # idle_flush_time => 10
-        # sniffing => true
-        # template_overwrite => true
+        flush_size => 20000
+        idle_flush_time => 10
+        sniffing => true
+        template_overwrite => true
     }
 }
