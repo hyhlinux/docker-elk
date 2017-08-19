@@ -21,7 +21,7 @@ input {
     redis {
         data_type => "pattern_channel"
         key => "logstash-*"
-        host => "redis"
+        host => "db"
         port => 6379
         threads => 1
     }
