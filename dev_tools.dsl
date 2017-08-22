@@ -106,3 +106,26 @@ DELETE db_apkpure_log
 #C
 PUT /db_apkpure_log
 GET db_apkpure_log/_mapping
+
+
+#
+#测试分析器， 查看分词效果
+GET /_analyze?analyzer=standard&text="2017-06"
+#{
+#  "tokens": [
+#    {
+#      "token": "2017",
+#      "start_offset": 1,
+#      "end_offset": 5,
+#      "type": "<NUM>",
+#      "position": 0
+#    },
+#    {
+#      "token": "06",
+#      "start_offset": 6,
+#      "end_offset": 8,
+#      "type": "<NUM>",
+#      "position": 1
+#    }
+#  ]
+#}
