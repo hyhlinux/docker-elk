@@ -94,3 +94,15 @@ GET db_apkpure_log/event_download/_search?q=package_name:com*
 #"total": 2001,
 GET db_apkpure_log/event_download/_search?q=!package_name:com*
 #"total": 702,
+
+
+
+#--------------P6
+#index manage
+DELETE /my_index2
+DELETE /my_index
+DELETE db_apkpure_log
+
+#C
+PUT /db_apkpure_log
+GET db_apkpure_log/_mapping
