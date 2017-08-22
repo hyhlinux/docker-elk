@@ -178,3 +178,71 @@ GET /_search
     }
 }
 
+
+
+# 查询2017-06-01的下载数据
+GET db_apkpure_log2017-06-01/event_download/_search
+{
+}
+# 模拟用户下载
+POST db_apkpure_log2017-06-01/event_download
+{
+    "category": "VIDEO_PLAYERS",
+    "country": "us",
+    "plat_type": "plat_type",
+    "package_name": "com.quickteam.videoplayer.pro",
+    "language": "*",
+    "add_date": "2017-06-01",
+    "apk_type": 1,
+    "device_type": "device_type",
+    "ip": "42.83.80.0",
+    "fid": "image/Y29tLnF1aWNrdGVhbS52aWRlb3BsYXllci5wcm9faWNvbl8wXzgzODY4ZDZj",
+    "ua": "us"
+}
+# 查询2017年的总下载量
+GET db_apkpure_log2017*/_search
+{
+    "query": {
+        "bool": {
+            "must": 
+                {
+                    "range": {
+                        "add_date": {
+                            "gte": 1483200000000,
+                            "lte": 1514735999999,
+                            "format": "epoch_millis"
+                        }
+                    }
+                }
+        }
+    },
+    "size": 0,
+    "_source": {
+        "excludes": []
+    },
+    "version": true
+}
+
+# 查询2017-06月的总下载量
+GET db_apkpure_log2017-06*/_search
+{
+    "query": {
+        "bool": {
+            "must": 
+                {
+                    "range": {
+                        "add_date": {
+                            "gte": 1496246400,
+                            "lte": 1514735999999,
+                            "format": "epoch_millis"
+                        }
+                    }
+                }
+        }
+    },
+    "size": 0,
+    "_source": {
+        "excludes": []
+    },
+    "version": true
+}
