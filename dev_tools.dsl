@@ -129,3 +129,29 @@ GET /_analyze?analyzer=standard&text="2017-06"
 #    }
 #  ]
 #}
+
+
+# 自定义字段是否分词
+PUT /gb/_mapping/tweet
+{
+  "properties" : {
+    "tag" : {
+      "type" :    "string",
+      "index":    "not_analyzed"
+    }
+  }
+}
+GET /gb/_mapping
+GET /gb/_analyze?field=tag&text=Black-cats
+#{
+#  "tokens": [
+#    {
+#      "token": "Black-cats",
+#      "start_offset": 0,
+#      "end_offset": 10,
+#      "type": "word",
+#      "position": 0
+#    }
+#  ]
+#}
+
