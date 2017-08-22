@@ -154,4 +154,27 @@ GET /gb/_analyze?field=tag&text=Black-cats
 #    }
 #  ]
 #}
+# P7 dsl
+#1
+GET /_search
+{
+}
+
+#2 match 包含关键字
+GET /_search
+{
+    "query": {
+        "match": {
+            "tweet": "elasticsearch"
+        }
+    }
+}
+GET /_search
+{
+    "query": {
+        "match": {
+            "package_name": "com.puzzletime.jigsaw"
+        }
+    }
+}
 
