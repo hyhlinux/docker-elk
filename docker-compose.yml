@@ -2,26 +2,28 @@ version: '2'
 
 services:
 
-  db:
-    build: db/
-    volumes:
-      - ./docker/redis/data:/data
-    ports:
-      - "6379:6379"
-    networks:
-      - elk
-
-  # elasticsearch:
-  #   build: elasticsearch/
+  # db:
+  #   build: db/
   #   volumes:
-  #     - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  #     - ./docker/redis/data:/data
   #   ports:
-  #     - "9200:9200"
-  #     - "9300:9300"
-  #   environment:
-  #     ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+  #     - "6379:6379"
   #   networks:
   #     - elk
+
+  elasticsearch:
+    build: elasticsearch/
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./docker/es/data:/data
+      # - ./docker/es/log:/log
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
 
   # logstash:
   #   build: logstash/
@@ -37,17 +39,18 @@ services:
   #   depends_on:
   #     - elasticsearch
   #     - db
+  #es-head
 
-  # kibana:
-  #   build: kibana/
-  #   volumes:
-  #     - ./kibana/config/:/usr/share/kibana/config
-  #   ports:
-  #     - "5601:5601"
-  #   networks:
-  #     - elk
-  #   depends_on:
-  #     - elasticsearch
+  kibana:
+    build: kibana/
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
 
 networks:
 
