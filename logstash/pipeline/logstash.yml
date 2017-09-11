@@ -13,32 +13,52 @@
 # }
 
 input {
-    # tcp {
-    #     port => 5000
-    #     mode => "server"
-    #     ssl_enable => false
+    tcp {
+        port => 5000
+        mode => "server"
+        type => "tcp:5000"
+        ssl_enable => false
+    }
+    #redis pub
+    # redis {
+    #     host => "192.168.9.46"
+    #     port => 6379
+    #     threads => 1
+    #     data_type => "pattern_channel"
+    #     key => "logstash-*"
     # }
+    #redis-list
     redis {
-        data_type => "pattern_channel"
-        key => "logstash-*"
-        host => "db"
+        host => "192.168.9.46"
         port => 6379
         threads => 1
+        type => "redis-data-A"
+        data_type => "pattern_channel"
+        key => "logstash-*"
     }
+
+    redis { 
+        host => "192.168.9.46"
+        port => 6379
+        threads => 1
+        type => "redis-data-B"
+        data_type => "list"
+        key => "listB"
+    } 
 }
 
-filter {
-    grok {
-        match => ["message", "%{HTTPDATE:logdate}"]
-    }
-    date {
-        match => ["logdate", "dd/MMM/yyyy:HH:mm:ss Z"]
-    }
-    geoip {
-        source => "message"
-        fields => ["city_name", "continent_code", "country_code2", "country_code3", "country_name", "dma_code", "ip", "latitude", "longitude", "postal_code", "region_name", "timezone"]
-    }
-}
+# filter {
+#     grok {
+#         match => ["message", "%{HTTPDATE:logdate}"]
+#     }
+#     date {
+#         match => ["logdate", "dd/MMM/yyyy:HH:mm:ss Z"]
+#     }
+#     geoip {
+#         source => "message"
+#         fields => ["city_name", "continent_code", "country_code2", "country_code3", "country_name", "dma_code", "ip", "latitude", "longitude", "postal_code", "region_name", "timezone"]
+#     }
+# }
 
 output {
     # stdout {
@@ -49,13 +69,67 @@ output {
     #     port  => 8888
     #     codec => json_lines
     # }
-    elasticsearch {
-        hosts => "elasticsearch:9200"
-        index => "logstash-%{+YYYY.MM.dd}"
-        document_type => "redis-log"
-        flush_size => 20000
-        idle_flush_time => 10
-        sniffing => true
-        template_overwrite => true
+    # elasticsearch {
+    #     hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
+    #     index => "logstash-%{+YYYY.MM.dd}"
+    #     document_type => "redis-log"
+    #     flush_size => 20000
+    #     idle_flush_time => 10
+    #     sniffing => true
+    #     template_overwrite => true
+    # }
+    if [type] == "redis-data-A" {
+        # stdout {
+        #     codec => rubydebug
+        # }
+        elasticsearch {
+            hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
+            index => "logstash-event-a-%{+YYYY.MM.dd}"
+            document_type => "redis-loga"
+            flush_size => 20000
+            idle_flush_time => 10
+            sniffing => true
+            template_overwrite => true
+            user => elastic
+            password => changeme
+        }
+    }else if [type] == "redis-data-B" {
+        # stdout {
+        #     codec => rubydebug
+        # }
+        elasticsearch {
+            hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
+            index => "logstash-event-b-%{+YYYY.MM.dd}"
+            document_type => "redis-logb"
+            codec => "json"
+            # protocol => "http"
+            flush_size => 20000
+            idle_flush_time => 10
+            sniffing => true
+            template_overwrite => true
+            user => elastic
+            password => changeme
+        }
+    }else if [type] == "redis-data-local" {
+        stdout {
+            codec => rubydebug
+        }
+        # elasticsearch {
+        #     hosts => ["192.168.9.46:9200"]
+        #     index => "logstash-event-local-%{+YYYY.MM.dd}"
+        #     document_type => "redis-log-test"
+        #     codec => "json"
+        #     # protocol => "http"
+        #     flush_size => 20000
+        #     idle_flush_time => 10
+        #     sniffing => true
+        #     template_overwrite => true
+        #     user => elastic
+        #     password => changeme
+        # }
+    }else if [type] == "tcp:5000" {
+        stdout {
+            codec => rubydebug
+        }
     }
 }
