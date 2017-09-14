@@ -3,7 +3,6 @@
 # 		port => 5000
 # 	}
 # }
-
 # ## Add your filters / logstash plugins configuration here
 
 # output {
@@ -13,12 +12,12 @@
 # }
 
 input {
-    tcp {
-        port => 5000
-        mode => "server"
-        type => "tcp:5000"
-        ssl_enable => false
-    }
+    # tcp {
+    #     port => 5000
+    #     mode => "server"
+    #     type => "tcp:5000"
+    #     ssl_enable => false
+    # }
     #redis pub
     # redis {
     #     host => "192.168.9.46"
@@ -28,22 +27,23 @@ input {
     #     key => "logstash-*"
     # }
     #redis-list
-    redis {
-        host => "192.168.9.46"
-        port => 6379
-        threads => 1
-        type => "redis-data-A"
-        data_type => "pattern_channel"
-        key => "logstash-*"
-    }
+    # redis {
+    #     host => "192.168.9.46"
+    #     port => 6379
+    #     threads => 1
+    #     type => "redis-data-A"
+    #     data_type => "pattern_channel"
+    #     key => "logstash-*"
+    # }
 
     redis { 
-        host => "192.168.9.46"
+        # host => "192.168.9.46"
+        host => "192.168.6.1"
         port => 6379
         threads => 1
-        type => "redis-data-B"
+        type => "db_apkpure_log"
         data_type => "list"
-        key => "listB"
+        key => "apkpure:logstash_list_dl_apkpuer_log"
     } 
 }
 
@@ -79,47 +79,13 @@ output {
     #     template_overwrite => true
     # }
     if [type] == "redis-data-A" {
-        # stdout {
-        #     codec => rubydebug
-        # }
-        elasticsearch {
-            hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
-            index => "logstash-event-a-%{+YYYY.MM.dd}"
-            document_type => "redis-loga"
-            flush_size => 20000
-            idle_flush_time => 10
-            sniffing => true
-            template_overwrite => true
-            user => elastic
-            password => changeme
-        }
-    }else if [type] == "redis-data-B" {
-        # stdout {
-        #     codec => rubydebug
-        # }
-        elasticsearch {
-            hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
-            index => "logstash-event-b-%{+YYYY.MM.dd}"
-            document_type => "redis-logb"
-            codec => "json"
-            # protocol => "http"
-            flush_size => 20000
-            idle_flush_time => 10
-            sniffing => true
-            template_overwrite => true
-            user => elastic
-            password => changeme
-        }
-    }else if [type] == "redis-data-local" {
         stdout {
             codec => rubydebug
         }
         # elasticsearch {
-        #     hosts => ["192.168.9.46:9200"]
-        #     index => "logstash-event-local-%{+YYYY.MM.dd}"
-        #     document_type => "redis-log-test"
-        #     codec => "json"
-        #     # protocol => "http"
+        #     hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
+        #     index => "logstash-event-a-%{+YYYY.MM.dd}"
+        #     document_type => "redis-loga"
         #     flush_size => 20000
         #     idle_flush_time => 10
         #     sniffing => true
@@ -127,6 +93,39 @@ output {
         #     user => elastic
         #     password => changeme
         # }
+    }else if [type] == "db_apkpure_log" {
+        stdout {
+            codec => rubydebug
+        }
+        # elasticsearch {
+        #     hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
+        #     index => "logstash_list_db_apkpure_log-%{+YYYY.MM.dd}"
+        #     document_type => "db_apkpure_log"
+        #     codec => "json"
+        #     flush_size => 20000
+        #     idle_flush_time => 10
+        #     sniffing => true
+        #     template_overwrite => true
+        #     user => elastic
+        #     password => changeme
+        # }
+    }else if [type] == "redis-data-local" {
+        stdout {
+            codec => rubydebug
+        }
+        elasticsearch {
+            hosts => ["192.168.9.46:9200"]
+            index => "logstash-event-local-%{+YYYY.MM.dd}"
+            document_type => "redis-log-test"
+            codec => "json"
+            # protocol => "http"
+            flush_size => 20000
+            idle_flush_time => 10
+            sniffing => true
+            template_overwrite => true
+            user => logstash_write
+            password => logstash_write
+        }
     }else if [type] == "tcp:5000" {
         stdout {
             codec => rubydebug

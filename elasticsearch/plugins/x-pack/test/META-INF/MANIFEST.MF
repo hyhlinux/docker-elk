@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+X-Compile-Elasticsearch-Version: 5.5.2
+Implementation-Title: org.elasticsearch.plugin#plugin;5.5.2
+Module-Origin: git@github.com:elastic/x-pack-elasticsearch.git
+Build-Date: 2017-08-14T12:50:42.939Z
+Implementation-Version: 5.5.2
+Built-By: vagrant
+Change: ff32724
+Module-Source: /plugin
+Branch: ff32724950ae4a2d35748147a06998d832b14fb0
+Built-Status: integration
+Gradle-Version: 3.3
+Built-OS: Linux
+X-Compile-Target-JDK: 1.8
+X-Compile-Elasticsearch-Snapshot: false
+X-Compile-Lucene-Version: 6.6.0
+X-Compile-Source-JDK: 1.8
+Created-By: 1.8.0_131-8u131-b11-2ubuntu1.16.04.3-b11 (Oracle Corporati
+ on)
+Build-Java-Version: 1.8
+

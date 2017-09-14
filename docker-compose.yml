@@ -15,7 +15,7 @@ services:
     build: elasticsearch/
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./docker/es/data:/data
+      - ./docker/es/data:/usr/share/elasticsearch/data
       # - ./docker/es/log:/log
     ports:
       - "9200:9200"
@@ -49,6 +49,8 @@ services:
       - "5601:5601"
     networks:
       - elk
+    links:
+      - elasticsearch:elasticsearch
     depends_on:
       - elasticsearch
 
