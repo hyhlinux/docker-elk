@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  logstash:
+    build: pg_logstash/
+    volumes:
+      - ./pg_logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./pg_logstash/pipeline:/usr/share/logstash/pipeline
+    # ports:
+    #   - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"

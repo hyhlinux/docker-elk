@@ -36,15 +36,26 @@ input {
     #     key => "logstash-*"
     # }
 
-    redis { 
-        # host => "192.168.9.46"
-        host => "192.168.6.1"
-        port => 6379
-        threads => 1
+    # redis { 
+    #     # host => "192.168.9.46"
+    #     host => "192.168.1.104"
+    #     port => 6379
+    #     threads => 1
+    #     type => "db_apkpure_log"
+    #     data_type => "list"
+    #     # key => "apkpure:logstash_list_dl_apkpuer_log"
+    #     key => "data_migrate:logstash_list_dl_apkpuer_log"
+    # } 
+    jdbc {
+        jdbc_connection_string => "jdbc:postgresql://192.168.1.104:5432/postgres"
+        jdbc_user => "postgres"
+        jdbc_password => "mysecretpassword"
         type => "db_apkpure_log"
-        data_type => "list"
-        key => "apkpure:logstash_list_dl_apkpuer_log"
-    } 
+        jdbc_validate_connection => true
+        jdbc_driver_library => "/usr/share/logstash/postgresql-42.1.4.jar"
+        jdbc_driver_class => "org.postgresql.Driver"
+        statement => "SELECT * from post_post where timestamp > '2017-09-02 00:00:00' and timestamp < '2017-09-02 23:59:59'"
+    }
 }
 
 # filter {
@@ -64,6 +75,12 @@ output {
     # stdout {
     #     codec => rubydebug
     # }
+    # elasticsearch {
+    #     hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
+    #     protocol => http
+    #     index => "data_test-2017-09-12"
+    #     document_type => "db_apkpure_log"
+    # }
     # tcp {
     #     host  => "localhost"
     #     port  => 8888
@@ -79,9 +96,9 @@ output {
     #     template_overwrite => true
     # }
     if [type] == "redis-data-A" {
-        stdout {
-            codec => rubydebug
-        }
+        # stdout {
+        #     codec => rubydebug
+        # }
         # elasticsearch {
         #     hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
         #     index => "logstash-event-a-%{+YYYY.MM.dd}"
@@ -98,34 +115,34 @@ output {
             codec => rubydebug
         }
         # elasticsearch {
-        #     hosts => ["192.168.6.13:9200", "192.168.6.12:9200"]
-        #     index => "logstash_list_db_apkpure_log-%{+YYYY.MM.dd}"
+        #     hosts => ["loclahost:9200"]
+        #     index => "migrate_data-%{+YYYY.MM.dd}"
         #     document_type => "db_apkpure_log"
         #     codec => "json"
         #     flush_size => 20000
         #     idle_flush_time => 10
         #     sniffing => true
         #     template_overwrite => true
-        #     user => elastic
-        #     password => changeme
+        #     # user => elastic
+        #     # password => changeme
         # }
     }else if [type] == "redis-data-local" {
         stdout {
             codec => rubydebug
         }
-        elasticsearch {
-            hosts => ["192.168.9.46:9200"]
-            index => "logstash-event-local-%{+YYYY.MM.dd}"
-            document_type => "redis-log-test"
-            codec => "json"
-            # protocol => "http"
-            flush_size => 20000
-            idle_flush_time => 10
-            sniffing => true
-            template_overwrite => true
-            user => logstash_write
-            password => logstash_write
-        }
+        # elasticsearch {
+        #     hosts => ["192.168.6.13:9200"]
+        #     index => "db_apkpure_log-%{+YYYY.MM.dd}"
+        #     document_type => "redis-log-test"
+        #     codec => "json"
+        #     # protocol => "http"
+        #     flush_size => 20000
+        #     idle_flush_time => 10
+        #     sniffing => true
+        #     template_overwrite => true
+        #     # user => logstash_write
+        #     # password => logstash_write
+        # }
     }else if [type] == "tcp:5000" {
         stdout {
             codec => rubydebug
