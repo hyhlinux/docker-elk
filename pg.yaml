@@ -6,6 +6,7 @@ services:
     volumes:
       - ./pg_logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./pg_logstash/pipeline:/usr/share/logstash/pipeline
+      - ./pg_logstash/postgresql-42.1.4.jar:/usr/share/logstash/postgresql-42.1.4.jar
     # ports:
     #   - "5000:5000"
     environment:
